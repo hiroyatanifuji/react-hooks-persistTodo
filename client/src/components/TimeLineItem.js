@@ -34,7 +34,7 @@ const styles = theme => ({
 
 const TimeLineItem = props => {
 
-  const { classes, item, key, uid } = props;
+  const { classes, item, key, uid, anotherName } = props;
 
   const style = item.id === uid ? (classes.myColor) : (classes.anotherColor);
 
@@ -59,7 +59,7 @@ const TimeLineItem = props => {
     return (
       <div className={classes.another}>
         <Typography variant="body1" gutterBottom align="left" style={{ marginTop: 10, marginRight: 10 }}>
-          {item.user}
+          {anotherName(item)}
         </Typography>
         {snackbar()}
       </div>

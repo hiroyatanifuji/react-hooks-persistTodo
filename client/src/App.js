@@ -1,65 +1,45 @@
-import React, { Component } from 'react';
-import PropTypes from "prop-types";
+import React, { useContext, useReducer } from 'react';
+import Home from './Home';
 
-// redux関連
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as actions from "./actions";
+// material-ui関連
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import blue from "@material-ui/core/colors/blue";
+import indigo from "@material-ui/core/colors/indigo";
 
-// materil-ui関連
-import { withStyles } from "@material-ui/core/styles";
-import Button from '@material-ui/core/Button';
+// context object
+import Store from "./context";
 
-// コンテナ読み込み
-import Todo from "./containers/Todo";
-import TimeLine from "./containers/TimeLine";
+import rootReducer from "./reducers";
 
-// スタイル
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    height: '100%',
-    zIndex: 1,
-    position: 'relative',
-    display: 'flex',
-    justifyContent: "space-around",
-    width: '100%',
-    paddingTop: 30,
+import { usePersistedContext, usePersistedReducer } from "./usePersist";
+
+// material-ui設定
+const theme = createMuiTheme({
+  palette: {
+    type: "light",
+    primary: blue,
+    secondary: indigo,
   },
-  leftContent: {
-    width: "45%"
+  typography: {
+    useNextVariants: true,
   },
-  rightContent: {
-    width: "45%",
-    display: "flex",
-    justifyContent: "center",
-    height: "95vh",
-    minHeight: 650
-  }
 });
 
-class App extends Component {
+const App = () => {
 
-  render() {
+  const globalStore = usePersistedContext(useContext(Store), "state");
 
-    const { classes } = this.props;
+  const [state, dispatch] = usePersistedReducer(
+    useReducer(rootReducer, globalStore),"state"
+  );
 
-    return (
-      <div className={classes.root}>
-        <div className={classes.leftContent}>
-          <Todo />
-        </div>
-        <div className={classes.rightContent}>
-          <TimeLine />
-        </div>
-      </div>
-    );
-  }
+  return (
+    <Store.Provider value={{ state, dispatch }}>
+      <MuiThemeProvider theme={theme}>
+        <Home />
+      </MuiThemeProvider>
+    </Store.Provider>
+  );
 }
 
-App.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, { withTheme: true })(App);
+export default App;

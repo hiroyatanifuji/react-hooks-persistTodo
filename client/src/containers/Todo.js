@@ -1,10 +1,8 @@
-import React, { Component } from "react";
+import React, { useContext, useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
+import * as actionTypes from "../actionTypes";
 
-// redux関連
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as actions from "../actions";
+import Store from "../context";
 
 // materil-ui関連
 import { withStyles } from "@material-ui/core/styles";
@@ -26,33 +24,45 @@ const styles = theme => ({
   }
 });
 
-class Todo extends Component {
+const Todo = (props) => {
 
-  state = {
-    todoInput: "",
-    userName: "",
-  }
+  const { classes } = props;
 
-  handleInput = (value) => {
-    this.setState({ todoInput: value });
+  const { state, dispatch } = useContext(Store);
+
+  const { TodoReducers, TimeLineReducers } = state;
+
+  const todoList = useMemo(() => TodoReducers.todoList, [TodoReducers.todoList]);
+  const userId = useMemo(() => TimeLineReducers.userId, [TimeLineReducers.userId]);
+  const userName = useMemo(() => TodoReducers.userName, [TodoReducers.userName]);
+
+  const [todoInput, setInput] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [filterList, setFilterList] = useState(todoList);
+
+  const handleInput = (e) => {
+    setInput(e.target.value);
   };
 
-  addTodo = () => {
-    const { actions } = this.props;
-    const { todoInput } = this.state;
-    actions.addTodo(todoInput);
-    return this.setState({ todoInput: "" });
+  const handleUserName = (e) => {
+    dispatch({ type: actionTypes.SET_USER_NAME, name: e.target.value });
   }
 
-  sendTodo = () => {
-    const { TodoReducers, actions, TimeLineReducers } = this.props;
-    const todoList = TodoReducers.todoList;
-    const { userName } = this.state;
+  const addTodo = (e) => {
+    if (e.target.value && e.key === "Enter") {
+      dispatch({ type: actionTypes.ADD_TODO, input: todoInput });
+      return setInput("");
+    }
+  }
+
+  const sendTodo = () => {
     if (todoList.length !== 0 && userName) {
-      const id = socket.id;
+
+      const id = userId ? userId : socket.id;
+
       let timeLineItem = { user: userName, id: id, todoList: todoList}
-      if (TimeLineReducers.userId !== id) {
-        actions.setUserId(id);
+      if (!userId) {
+        dispatch({ type: actionTypes.SET_USER_ID, id: id });
       }
       return socket.emit("SEND_TODO", timeLineItem);
     } else {
@@ -60,39 +70,64 @@ class Todo extends Component {
     }
   }
 
-  render() {
+  const doneTodo = (index) => {
+    dispatch({ type: actionTypes.DONE_TODO, index: index });
+  }
+  const deleteTodo = (index) => {
+    dispatch({ type: actionTypes.DELETE_TODO, index: index });
+  }
 
-    const { actions, TodoReducers, classes } = this.props;
-    const { todoInput, userName } = this.state;
+  const filtering = () => {
+    switch (filter) {
+      case "all":
+        return todoList;
+      case "active":
+        return todoList.filter(todo => todo.done === false);
+      case "complete":
+        return todoList.filter(todo => todo.done === true);
+      default:
+        return todoList;
+    }
+  }
 
-    return (
+  useEffect(() => setFilterList(filtering()), [todoList, filter]);
+
+  const filterAll = useCallback(() => filter !== "all" && setFilter("all"), [filter]);
+  const filterActive = useCallback(() => filter !== "active" && setFilter("active"), [filter]);
+  const filterComplete = useCallback(() => filter !== "complete" && setFilter("complete"), [filter]);
+
+  return (
+    <div>
+      <div>
+        <InputBase
+          className={classes.nameInput}
+          placeholder="user name"
+          value={userName}
+          onChange={handleUserName}
+        />
+        <Button onClick={sendTodo}>Send</Button>
+      </div>
+      <div>
+        <TodoInput
+          handleInput={handleInput}
+          value={todoInput}
+          addTodo={addTodo}
+        />
+      </div>
       <div>
         <div>
-          <InputBase
-            className={classes.nameInput}
-            placeholder="user name"
-            value={userName}
-            onChange={(e) => this.setState({ userName: e.target.value })}
-          />
-          <Button onClick={() => this.sendTodo()}>Send</Button>
+          <Button onClick={filterAll}>All</Button>
+          <Button onClick={filterActive}>Active</Button>
+          <Button onClick={filterComplete}>Complete</Button>
         </div>
-        <div>
-          <TodoInput
-            handleInput={this.handleInput}
-            value={todoInput}
-            addTodo={this.addTodo}
-          />
-          <TodoList
-            filter={TodoReducers.filter}
-            todoList={TodoReducers.todoList}
-            setFilter={(filter) => actions.setFilter(filter)}
-            doneTodo={(index) => actions.doneTodo(index)}
-            deleteTodo={(index) => actions.deleteTodo(index)}
-          />
-        </div>
+        <TodoList
+          filterList={filterList}
+          doneTodo={doneTodo}
+          deleteTodo={deleteTodo}
+        />
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 Todo.propTypes = {
@@ -100,16 +135,4 @@ Todo.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-// redux設定
-const mapStateToProps = state => ({
-  TodoReducers: state.TodoReducers,
-  TimeLineReducers: state.TimeLineReducers
-});
-
-const mapDisaptchToProps = dispatch => ({
-  actions: bindActionCreators(actions, dispatch),
-});
-
-export default connect(mapStateToProps, mapDisaptchToProps)(
-  withStyles(styles, { withTheme: true })(Todo)
-);
+export default withStyles(styles, { withTheme: true })(Todo);

@@ -1,11 +1,6 @@
 import * as actionTypes from "../actionTypes";
 
-const initialState = {
-  userId: null,
-  timeLineItems: [],
-};
-
-export default (state = initialState, action) => {
+export default (state = null, action) => {
   switch (action.type) {
     case actionTypes.SEND_TODO:
       {

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 // materil-ui関連
@@ -12,6 +12,7 @@ const styles = theme => ({
 })
 
 const TodoInput = (props) => {
+
   const { handleInput, value, addTodo, classes } = props;
   return (
     <div>
@@ -22,12 +23,8 @@ const TodoInput = (props) => {
         variant="outlined"
         value={value}
         className={classes.textField}
-        onChange={(e) => handleInput(e.target.value)}
-        onKeyPress={(e) => {
-          if (e.target.value && e.key === "Enter") {
-            addTodo();
-          }
-        }}
+        onChange={handleInput}
+        onKeyPress={addTodo}
       />
     </div>
   );

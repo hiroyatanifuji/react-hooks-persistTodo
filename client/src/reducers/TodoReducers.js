@@ -1,13 +1,12 @@
 import * as actionTypes from "../actionTypes";
 
-const initialState = {
-  todoInput: "",
-  todoList: [],
-  filter: "all",
-};
-
-export default (state = initialState, action) => {
+export default (state = null, action) => {
   switch (action.type) {
+    case actionTypes.SET_USER_NAME:
+      return {
+        ...state,
+        userName: action.name
+      };
     case actionTypes.ADD_TODO:
       {
         let newList = state.todoList.concat();
@@ -24,11 +23,6 @@ export default (state = initialState, action) => {
           todoList: newList,
         };
       }
-    case actionTypes.SET_FILTER:
-      return {
-        ...state,
-        filter: action.filter
-      };
     case actionTypes.DONE_TODO:
       {
         const index = action.index;
