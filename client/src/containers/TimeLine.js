@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import * as actionTypes from "../actionTypes";
+import * as actions from "../actions";
 
 import Store from "../context";
 
@@ -35,7 +36,7 @@ const TimeLine = (props) => {
   const uid = useMemo(() => userId, [userId]);
 
   useEffect(() => {
-    socket.on("RECEIVE_TODO", (data) => dispatch({ type: actionTypes.SEND_TODO, data: data }))
+    socket.on("RECEIVE_TODO", (data) => dispatch(actions.sendTodo(data)))
   }, []);
 
   const anotherName = useCallback((item) => items[items.lastIndexOf(item)].user, [timeLineItems]);

@@ -1,14 +1,14 @@
 import * as actionTypes from "../actionTypes";
 
+// ユーザーネームのセット時
+export const setUserName = (e) => ({
+  type: actionTypes.SET_USER_NAME,
+  name: e.target.value
+});
 // todo追加時
 export const addTodo = (input) => ({
   type: actionTypes.ADD_TODO,
   input: input
-});
-// フィルターセット時
-export const setFilter = (filter) => ({
-  type: actionTypes.SET_FILTER,
-  filter: filter,
 });
 // todo完了時
 export const doneTodo = (index) => ({

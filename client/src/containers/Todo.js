@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import * as actionTypes from "../actionTypes";
+import * as actions from "../actions";
 
 import Store from "../context";
 
@@ -45,12 +46,12 @@ const Todo = (props) => {
   };
 
   const handleUserName = (e) => {
-    dispatch({ type: actionTypes.SET_USER_NAME, name: e.target.value });
+    dispatch(actions.setUserName(e));
   }
 
   const addTodo = (e) => {
     if (e.target.value && e.key === "Enter") {
-      dispatch({ type: actionTypes.ADD_TODO, input: todoInput });
+      dispatch(actions.addTodo(todoInput));
       return setInput("");
     }
   }
@@ -62,7 +63,7 @@ const Todo = (props) => {
 
       let timeLineItem = { user: userName, id: id, todoList: todoList}
       if (!userId) {
-        dispatch({ type: actionTypes.SET_USER_ID, id: id });
+        dispatch(actions.setUserId(id));
       }
       return socket.emit("SEND_TODO", timeLineItem);
     } else {
@@ -71,10 +72,10 @@ const Todo = (props) => {
   }
 
   const doneTodo = (index) => {
-    dispatch({ type: actionTypes.DONE_TODO, index: index });
+    dispatch(actions.doneTodo(index));
   }
   const deleteTodo = (index) => {
-    dispatch({ type: actionTypes.DELETE_TODO, index: index });
+    dispatch(actions.deleteTodo(index));
   }
 
   const filtering = () => {
