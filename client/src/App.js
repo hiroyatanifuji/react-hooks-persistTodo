@@ -11,8 +11,6 @@ import Store from "./context";
 
 import rootReducer from "./reducers";
 
-import { usePersistedContext, usePersistedReducer } from "./usePersist";
-
 // material-ui設定
 const theme = createMuiTheme({
   palette: {
@@ -27,11 +25,7 @@ const theme = createMuiTheme({
 
 const App = () => {
 
-  const globalStore = usePersistedContext(useContext(Store), "state");
-
-  const [state, dispatch] = usePersistedReducer(
-    useReducer(rootReducer, globalStore),"state"
-  );
+  const [state, dispatch] = useReducer(rootReducer, useContext(Store));
 
   return (
     <Store.Provider value={{ state, dispatch }}>
