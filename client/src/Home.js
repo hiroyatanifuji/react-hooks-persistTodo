@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from "prop-types";
 
 // materil-ui関連
 import { withStyles } from "@material-ui/core/styles";
-import Button from '@material-ui/core/Button';
 
 // コンテナ読み込み
 import Todo from "./containers/Todo";

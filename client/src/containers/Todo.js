@@ -1,8 +1,10 @@
 import React, { useContext, useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
-import * as actionTypes from "../actionTypes";
+
+// actions関連
 import * as actions from "../actions";
 
+// context object
 import Store from "../context";
 
 // materil-ui関連
@@ -14,6 +16,7 @@ import InputBase from "@material-ui/core/InputBase";
 import TodoInput from "../components/TodoInput";
 import TodoList from "../components/TodoList";
 
+// socketインスタンス
 import socket from "../socket";
 
 const styles = theme => ({
@@ -21,7 +24,16 @@ const styles = theme => ({
 
   },
   nameInput: {
+    padding: "4px 12px",
+    borderRadius: 4,
+    border: "1px solid #ced4da",
     backgroundColor: theme.palette.background.paper,
+  },
+  filterButtons: {
+    display: "flex",
+  },
+  button: {
+    marginRight: 10,
   }
 });
 
@@ -29,14 +41,16 @@ const Todo = (props) => {
 
   const { classes } = props;
 
+  // global state
   const { state, dispatch } = useContext(Store);
-
   const { TodoReducers, TimeLineReducers } = state;
 
+  // golobal state memorize
   const todoList = useMemo(() => TodoReducers.todoList, [TodoReducers.todoList]);
   const userId = useMemo(() => TimeLineReducers.userId, [TimeLineReducers.userId]);
   const userName = useMemo(() => TodoReducers.userName, [TodoReducers.userName]);
 
+  // local state
   const [todoInput, setInput] = useState("");
   const [filter, setFilter] = useState("all");
   const [filterList, setFilterList] = useState(todoList);
@@ -58,16 +72,15 @@ const Todo = (props) => {
 
   const sendTodo = () => {
     if (todoList.length !== 0 && userName) {
-
+      // 初回投稿時にsocketIdをuserIdに保存
       const id = userId ? userId : socket.id;
-
       let timeLineItem = { user: userName, id: id, todoList: todoList}
       if (!userId) {
         dispatch(actions.setUserId(id));
       }
       return socket.emit("SEND_TODO", timeLineItem);
     } else {
-      alert("Error");
+      alert("Input Name and Todo");
     }
   }
 
@@ -78,6 +91,7 @@ const Todo = (props) => {
     dispatch(actions.deleteTodo(index));
   }
 
+  // local stateのfilterによってlistを応変
   const filtering = () => {
     switch (filter) {
       case "all":
@@ -91,11 +105,18 @@ const Todo = (props) => {
     }
   }
 
+  // todoList、filterの変更時のみに制御
   useEffect(() => setFilterList(filtering()), [todoList, filter]);
 
+  // setFilter function memorize
   const filterAll = useCallback(() => filter !== "all" && setFilter("all"), [filter]);
   const filterActive = useCallback(() => filter !== "active" && setFilter("active"), [filter]);
   const filterComplete = useCallback(() => filter !== "complete" && setFilter("complete"), [filter]);
+
+  // button color memorize
+  const colorAll = useMemo(() => filter === "all" ? "secondary" : "inherit", [filter]);
+  const colorActive = useMemo(() => filter === "active" ? "secondary" : "inherit", [filter]);
+  const colorComplete = useMemo(() => filter === "complete" ? "secondary" : "inherit", [filter]);
 
   return (
     <div>
@@ -106,7 +127,9 @@ const Todo = (props) => {
           value={userName}
           onChange={handleUserName}
         />
-        <Button onClick={sendTodo}>Send</Button>
+        <Button variant="contained" color="secondary" onClick={sendTodo}>
+          Send
+        </Button>
       </div>
       <div>
         <TodoInput
@@ -116,10 +139,10 @@ const Todo = (props) => {
         />
       </div>
       <div>
-        <div>
-          <Button onClick={filterAll}>All</Button>
-          <Button onClick={filterActive}>Active</Button>
-          <Button onClick={filterComplete}>Complete</Button>
+        <div className={classes.filterButtons}>
+          <Button className={classes.button} color={colorAll} variant="outlined" onClick={filterAll}>All</Button>
+          <Button className={classes.button} color={colorActive} variant="outlined" onClick={filterActive}>Active</Button>
+          <Button className={classes.button} color={colorComplete} variant="outlined" onClick={filterComplete}>Complete</Button>
         </div>
         <TodoList
           filterList={filterList}

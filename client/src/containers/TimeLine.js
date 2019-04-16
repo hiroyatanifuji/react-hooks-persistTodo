@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
-import * as actionTypes from "../actionTypes";
+
+// actions関連
 import * as actions from "../actions";
 
+// context object
 import Store from "../context";
 
 // materil-ui関連
@@ -11,6 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
 // コンポーネント準備
 import TimeLineItem from "../components/TimeLineItem";
 
+// socketインスタンス
 import socket from "../socket";
 
 const styles = theme => ({
@@ -28,18 +31,27 @@ const TimeLine = (props) => {
 
   const { classes } = props;
 
+  // global state
   const { state, dispatch } = useContext(Store);
   const { TimeLineReducers } = state;
   const { timeLineItems, userId } = TimeLineReducers;
 
+  // global state memorize
   const items = useMemo(() => timeLineItems, [timeLineItems]);
   const uid = useMemo(() => userId, [userId]);
 
+  // Mount後一度だけ呼ばれる
   useEffect(() => {
     socket.on("RECEIVE_TODO", (data) => dispatch(actions.sendTodo(data)))
   }, []);
 
-  const anotherName = useCallback((item) => items[items.lastIndexOf(item)].user, [timeLineItems]);
+  // function memorize
+  // 相手の名前取得する関数
+  // 相手の名前が変更されたら適応する
+  const anotherName = useCallback((item) => {
+    const result = items.filter(it => it.id === item.id);
+    return result[result.length - 1].user;
+  }, [timeLineItems]);
 
   return (
     <div className={classes.root}>

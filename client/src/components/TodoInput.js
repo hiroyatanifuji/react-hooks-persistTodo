@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 // materil-ui関連
@@ -8,6 +8,7 @@ import TextField from "@material-ui/core/TextField";
 const styles = theme => ({
   textField: {
     backgroundColor: theme.palette.background.paper,
+    width: "60%",
   }
 })
 
@@ -18,7 +19,7 @@ const TodoInput = (props) => {
     <div>
       <TextField
         id="todo"
-        placeholder="To Do"
+        placeholder="Add ToDo"
         margin="normal"
         variant="outlined"
         value={value}
@@ -28,6 +29,11 @@ const TodoInput = (props) => {
       />
     </div>
   );
+};
+
+TodoInput.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true})(TodoInput);

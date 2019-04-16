@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
-
 import classNames from "classnames";
 
 // material-ui関連
@@ -34,13 +33,14 @@ const styles = theme => ({
 
 const TimeLineItem = props => {
 
-  const { classes, item, key, uid, anotherName } = props;
+  const { classes, item, uid, anotherName } = props;
 
-  const style = item.id === uid ? (classes.myColor) : (classes.anotherColor);
+  // 相手からの投稿の場合色分け & memorize
+  const style = useMemo(() => item.id === uid ? (classes.myColor) : (classes.anotherColor), [item]);
 
-  const snackbar = () => (
+  // function memorize
+  const snackbar = useCallback(() => (
     <SnackbarContent
-      key={key}
       className={classNames(classes.content, style)}
       aria-describedby="client-snackbar"
       message={
@@ -53,7 +53,7 @@ const TimeLineItem = props => {
         </ul>
       }
     />
-  );
+  ), [item]);
 
   if (item.id !== uid) {
     return (
