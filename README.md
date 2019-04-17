@@ -25,23 +25,20 @@ socket.io: 2.2.0（Web Socketのためのサーバー側のライブラリ）
  git clone git@github.com:hiroyatanifuji/react-hooks-todoApp.git
 
  cd react-hooks-todoApp
-
  npm install
 
  cd client
-
  npm install
 
  cd ..
-
  npm run dev
 ```
 
 ## 機能
 -　ToDoフィルタリング  
-　ToDoを全て/未完了/完了でフィルタリング管理  
+  ToDoを全て/未完了/完了でフィルタリング管理  
 -　ToDoの削除  
-　間違って追加してしまったToDoの削除機能  
+  間違って追加してしまったToDoの削除機能  
 -　Todoのリアルタイムシェア、Twitterシェア  
-    コミュニティーにシェアすることで、モチベーションアップやTodoに強制力を持たせて生産性をあげるための機能
+  コミュニティーにシェアすることで、モチベーションアップやTodoに強制力を持たせて生産性をあげるための機能
 
