@@ -20,6 +20,11 @@ export const deleteTodo = (index) => ({
   type: actionTypes.DELETE_TODO,
   index: index,
 });
+// ログイン直後、ユーザーネームセット
+export const initialSet = (name) => ({
+  type: actionTypes.INITIAL_SET,
+  name: name
+});
 
 // todo送信時
 export const sendTodo = (data) => ({

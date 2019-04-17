@@ -1,5 +1,8 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext, useReducer, useEffect } from 'react';
 import Home from './Home';
+
+// actions関連
+import * as actions from "./actions";
 
 // material-ui関連
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
@@ -8,6 +11,9 @@ import red from '@material-ui/core/colors/red';
 
 // context object
 import Store from "./context";
+
+// localstorageと結びつける関数
+import { usePersistedContext, usePersistedReducer } from "./usePersist";
 
 // reducer関連
 import rootReducer from "./reducers";
@@ -24,10 +30,20 @@ const theme = createMuiTheme({
   },
 });
 
-const App = () => {
+const App = (props) => {
 
-  // stateとdispatch設定
-  const [state, dispatch] = useReducer(rootReducer, useContext(Store));
+  const name = props.userName;
+
+  // localstorageにデータがあれば返す、なければ初期値
+  const globalStore = usePersistedContext(useContext(Store), name);
+
+  // stateが変更したら、localstorageにsetする
+  const [state, dispatch] = usePersistedReducer(
+    useReducer(rootReducer, globalStore), name
+  );
+
+  // 初期設定としてユーザーネームセット
+  useEffect(() => dispatch(actions.initialSet(name)), []);
 
   return (
     <Store.Provider value={{ state, dispatch }}>

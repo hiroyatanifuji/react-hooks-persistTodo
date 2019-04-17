@@ -47,6 +47,11 @@ export default (state = null, action) => {
           todoList: newList
         };
       }
+    case actionTypes.INITIAL_SET:
+      return {
+        ...state,
+        userName: action.name
+      };
     default:
       return state;
   }

@@ -59,6 +59,8 @@ const Todo = (props) => {
   const userId = useMemo(() => TimeLineReducers.userId, [TimeLineReducers.userId]);
   const userName = useMemo(() => TodoReducers.userName, [TodoReducers.userName]);
 
+  console.log(userName);
+
   // local state
   const [todoInput, setInput] = useState("");
   const [filter, setFilter] = useState("all");

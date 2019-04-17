@@ -1,5 +1,5 @@
 ## React-hooks-todoApp
-React Hooksを使用したTodoアプリケーションです。通常のTodo管理に加えて、ボタン一つでWebSocketによるリアルタイムシェアやTwitterシェアすることができます。タイムライン上では仲間のTodoをご覧になることができます。ブラウザのタブを二つ用意し、Todoを送信いただくとリアルタイムで受信されるのを確認することができます。
+React Hooksを使用したTodoアプリケーションです。通常のTodo管理に加えて、ボタン一つでWebSocketによるリアルタイムシェアやTwitterシェアすることができます。タイムライン上では仲間のTodoをご覧になることができます。ブラウザのタブを二つ用意し、Todoを送信いただくとリアルタイムで受信されるのを確認することができます。また、データが永続化されるため、いつでも確認可能です。
 
 ![alt](https://raw.githubusercontent.com/wiki/hiroyatanifuji/react-hooks-todoApp/images/demoImage.jpeg)
 
@@ -47,4 +47,8 @@ socket.io: 2.2.0（Web Socketのためのサーバー側のライブラリ）
 
 -　Todoのリアルタイムシェア、Twitterシェア  
   コミュニティーにシェアすることで、モチベーションアップやToDoに強制力を持たせて生産性をあげるための機能
+
+-　ToDoの永続化  
+  ToDoがいつでも再度確認ができる機能
+
 
