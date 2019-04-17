@@ -1,4 +1,4 @@
-## React-hooks-todoApp
+## React-hooks-persistTodo
 React Hooksを使用したTodoアプリケーションです。通常のTodo管理に加えて、ボタン一つでWebSocketによるリアルタイムシェアやTwitterシェアすることができます。タイムライン上では仲間のTodoをご覧になることができます。ブラウザのタブを二つ用意し、Todoを送信いただくとリアルタイムで受信されるのを確認することができます。また、データが永続化されるため、いつでも確認可能です。
 
 ![alt](https://raw.githubusercontent.com/wiki/hiroyatanifuji/react-hooks-todoApp/images/demoImage.jpeg)
