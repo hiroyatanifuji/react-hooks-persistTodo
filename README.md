@@ -22,13 +22,19 @@ socket.io: 2.2.0（Web Socketのためのサーバー側のライブラリ）
 
 ## セットアップ方法
 ```
- git clone git@github.com:hiroyatanifuji/react-hooks-todoApp.git  
- cd react-hooks-todoApp  
- npm install  
- cd client  
- npm install  
- cd ..  
- npm run dev  
+ git clone git@github.com:hiroyatanifuji/react-hooks-todoApp.git
+
+ cd react-hooks-todoApp
+
+ npm install
+
+ cd client
+
+ npm install
+
+ cd ..
+
+ npm run dev
 ```
 
 ## 機能
