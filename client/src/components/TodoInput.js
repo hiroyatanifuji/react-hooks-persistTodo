@@ -6,9 +6,12 @@ import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 
 const styles = theme => ({
+  root: {
+    width: "68%"
+  },
   textField: {
     backgroundColor: theme.palette.background.paper,
-    width: "60%",
+    width: "100%",
   }
 })
 
@@ -16,7 +19,7 @@ const TodoInput = (props) => {
 
   const { handleInput, value, addTodo, classes } = props;
   return (
-    <div>
+    <div className={classes.root}>
       <TextField
         id="todo"
         placeholder="Add ToDo"

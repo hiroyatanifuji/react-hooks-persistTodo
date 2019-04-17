@@ -16,13 +16,12 @@ import InputBase from "@material-ui/core/InputBase";
 import TodoInput from "../components/TodoInput";
 import TodoList from "../components/TodoList";
 
+import { TwitterShareButton,  TwitterIcon } from "react-share";
+
 // socketインスタンス
 import socket from "../socket";
 
 const styles = theme => ({
-  root: {
-
-  },
   nameInput: {
     padding: "4px 12px",
     borderRadius: 4,
@@ -34,6 +33,16 @@ const styles = theme => ({
   },
   button: {
     marginRight: 10,
+  },
+  todoInput: {
+    display: "flex",
+    width: "100%"
+  },
+  shareIcon: {
+    width: 60,
+    height: 60,
+    marginTop: 16,
+    marginLeft: 10
   }
 });
 
@@ -74,7 +83,7 @@ const Todo = (props) => {
     if (todoList.length !== 0 && userName) {
       // 初回投稿時にsocketIdをuserIdに保存
       const id = userId ? userId : socket.id;
-      let timeLineItem = { user: userName, id: id, todoList: todoList}
+      let timeLineItem = { user: userName, id: id, todoList: filterList}
       if (!userId) {
         dispatch(actions.setUserId(id));
       }
@@ -118,6 +127,12 @@ const Todo = (props) => {
   const colorActive = useMemo(() => filter === "active" ? "secondary" : "inherit", [filter]);
   const colorComplete = useMemo(() => filter === "complete" ? "secondary" : "inherit", [filter]);
 
+  // share用ToDo文字列をmemorize
+  const shareTitle = useMemo(() => {
+    const shareList = filterList.map(i => "・" + i.title).join("\n");
+    return "今日のToDo\n" + shareList;
+  }, [filterList]);
+
   return (
     <div>
       <div>
@@ -131,12 +146,19 @@ const Todo = (props) => {
           Send
         </Button>
       </div>
-      <div>
+      <div className={classes.todoInput}>
         <TodoInput
           handleInput={handleInput}
           value={todoInput}
           addTodo={addTodo}
         />
+        <TwitterShareButton
+          url="??"
+          title={shareTitle}
+          className={classes.shareIcon}
+        >
+          <TwitterIcon size={60} round />
+        </TwitterShareButton>
       </div>
       <div>
         <div className={classes.filterButtons}>

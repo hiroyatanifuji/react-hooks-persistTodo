@@ -29,23 +29,23 @@ const styles = theme => ({
     justifyContent: "center",
     height: "95vh",
     minHeight: 650
-  }
+  },
 });
 
 const Home = (props) => {
 
-    const { classes } = props;
+  const { classes } = props;
 
-    return (
-      <div className={classes.root}>
-        <div className={classes.leftContent}>
-          <Todo />
-        </div>
-        <div className={classes.rightContent}>
-          <TimeLine />
-        </div>
+  return (
+    <div className={classes.root}>
+      <div className={classes.leftContent}>
+        <Todo />
       </div>
-    );
+      <div className={classes.rightContent}>
+        <TimeLine />
+      </div>
+    </div>
+  );
 }
 
 Home.propTypes = {
